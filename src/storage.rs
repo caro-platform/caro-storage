@@ -1,11 +1,21 @@
-use std::sync::Arc;
+use std::{env, sync::Arc};
 
 use crate::value::Value;
 use rusqlite::Connection;
 use serde::{de::DeserializeOwned, Serialize};
 
-const STORAGE_DIR: &str = "/etc/caro.storage.d/";
+pub const STORAGE_DIR_PATH_ENV: &str = "CARO_STORAGE_DIR_PATH";
+const DEFAULT_STORAGE_DIR: &str = "/etc/caro.storage.d/";
+
 pub(crate) const VALUES_TABLE_NAME: &str = "storage";
+
+fn get_storage_dir() -> String {
+    if let Ok(path) = env::var(STORAGE_DIR_PATH_ENV) {
+        path
+    } else {
+        DEFAULT_STORAGE_DIR.into()
+    }
+}
 
 pub struct Storage {
     connection: Arc<Connection>,
@@ -16,7 +26,8 @@ impl Storage {
         let this = Self {
             connection: Arc::new(Connection::open(&format!(
                 "{}{}.db3",
-                STORAGE_DIR, service_name
+                get_storage_dir(),
+                service_name
             ))?),
         };
 

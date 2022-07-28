@@ -2,7 +2,8 @@ use std::env;
 
 use tempdir::TempDir;
 
-use caro_storage::{storage::STORAGE_DIR_PATH_ENV, Storage};
+use caro_storage::Storage;
+use caro_storage_common::STORAGE_DIR_PATH_ENV;
 
 #[test]
 fn test_values() {

@@ -54,4 +54,14 @@ impl QueryRunner {
             [name],
         );
     }
+
+    pub fn list_values(&self) -> crate::Result<Vec<(String, Vec<u8>)>> {
+        let mut statement = self
+            .connection
+            .prepare(&format!("SELECT name, value FROM {}", VALUES_TABLE_NAME))?;
+
+        let values_iter = statement.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?;
+
+        Ok(values_iter.map(|res| res.unwrap()).collect())
+    }
 }

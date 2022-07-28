@@ -24,8 +24,8 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
 
         let bson = bson::from_slice(blob.as_ref())?;
 
-        let result = bson::from_bson::<Document<T>>(bson)?;
-        Ok(result.value())
+        let document = bson::from_bson::<Document<T>>(bson)?;
+        Ok(document.value())
     }
 
     pub fn get_default(&self, default: T) -> T {

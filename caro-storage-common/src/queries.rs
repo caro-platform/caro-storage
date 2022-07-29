@@ -2,7 +2,9 @@ use rusqlite::{params, Connection};
 
 pub(crate) const VALUES_TABLE_NAME: &str = "storage";
 
+/// Utility struct to run SQL queries
 pub struct QueryRunner {
+    /// SQLite connections
     connection: Connection,
 }
 

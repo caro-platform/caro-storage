@@ -2,17 +2,17 @@ use std::env;
 
 use tempdir::TempDir;
 
-use caro_storage::Storage;
-use caro_storage_common::STORAGE_DIR_PATH_ENV;
+use karo_storage::Storage;
+use karo_storage_common::STORAGE_DIR_PATH_ENV;
 
 #[test]
 fn test_values() {
-    let storage_dir = TempDir::new("caro_hub_socket_dir").expect("Failed to create socket tempdir");
+    let storage_dir = TempDir::new("karo_hub_socket_dir").expect("Failed to create socket tempdir");
     let storage_dir_path = storage_dir.path().as_os_str();
 
     env::set_var(STORAGE_DIR_PATH_ENV, storage_dir_path);
 
-    let storage = Storage::open("caro.storage.example").unwrap();
+    let storage = Storage::open("karo.storage.example").unwrap();
 
     let value = storage.load::<i32>("test_value");
     assert!(value.get().is_err());

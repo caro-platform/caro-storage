@@ -2,9 +2,9 @@ use bson::Bson;
 use clap::{self, Parser};
 use colored::*;
 
-use caro_storage_common::{document::Document, get_storage_dir, queries::QueryRunner};
+use karo_storage_common::{document::Document, get_storage_dir, queries::QueryRunner};
 
-/// Caro storage viewer
+/// Karo storage viewer
 #[derive(Parser, Debug)]
 #[clap(version, about, long_about = None)]
 pub struct Args {

@@ -1,4 +1,4 @@
-use caro_storage::Storage;
+use karo_storage::Storage;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -9,7 +9,7 @@ struct ComplexStructure {
 }
 
 fn main() {
-    let storage = Storage::open("caro.viewer.example").unwrap();
+    let storage = Storage::open("karo.viewer.example").unwrap();
 
     storage.load::<i32>("int").set(11);
     storage.load::<String>("string").set("Hello, world!".into());

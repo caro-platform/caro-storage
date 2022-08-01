@@ -1,3 +1,3 @@
 [workspace]
 
-members = ["caro-storage-common", "caro-storage-lib", "caro-storage-viewer"]
+members = ["karo-storage-common", "karo-storage-lib", "karo-storage-viewer"]

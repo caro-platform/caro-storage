@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::value::Value;
 use serde::{de::DeserializeOwned, Serialize};
 
-use caro_storage_common::{get_storage_dir, queries::QueryRunner};
+use karo_storage_common::{get_storage_dir, queries::QueryRunner};
 
 /// Storage connections handle
 pub struct Storage {

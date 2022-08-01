@@ -1,5 +1,5 @@
 [package]
-name = "caro-storage-viewer"
+name = "karo-storage-viewer"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,4 +8,4 @@ bson = "2.3"
 clap = { version = "3.2", features = ["derive", "color"] }
 colored = "2.0.0"
 
-caro-storage-common = { path = "../caro-storage-common" }
+karo-storage-common = { path = "../karo-storage-common" }

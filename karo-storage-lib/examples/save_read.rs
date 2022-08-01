@@ -1,9 +1,9 @@
 use std::io::Error;
 
-use caro_storage::Storage;
+use karo_storage::Storage;
 
 fn main() -> Result<(), Error> {
-    let storage = Storage::open("caro.storage.example").unwrap();
+    let storage = Storage::open("karo.storage.example").unwrap();
 
     let value = storage.load::<i32>("test_value");
     assert!(value.get().is_err());

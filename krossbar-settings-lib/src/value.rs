@@ -2,7 +2,7 @@ use std::{marker::PhantomData, sync::Arc};
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use karo_storage_common::{document::Document, queries::QueryRunner};
+use krossbar_storage_common::{document::Document, queries::QueryRunner};
 
 /// Persistend value handle
 pub struct Value<T> {

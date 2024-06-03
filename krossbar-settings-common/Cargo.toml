@@ -1,0 +1,26 @@
+[package]
+name = "krossbar-settings-common"
+version = "0.5.0"
+edition = "2021"
+rust-version = "1.75"
+authors = ["Alexander Smoktal <https://github.com/alexander-smoktal>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/krossbar-platform/krossbar-settings"
+homepage = "https://krossbar.rs"
+description = """
+Krossbar settings common data
+"""
+categories = ["configuration"]
+keywords = ["settings", "configuration"]
+
+[dependencies]
+bson = "2.3"
+serde = "1.0"
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1.38.0", features = ["fs", "io-util"] }
+
+[dev-dependencies]
+tempdir = "0.3.7"
+tokio = { version = "1.38.0", features = ["full"] }

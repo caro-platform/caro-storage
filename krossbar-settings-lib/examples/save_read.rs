@@ -1,9 +1,9 @@
 use std::io::Error;
 
-use karo_storage::Storage;
+use krossbar_storage::Storage;
 
 fn main() -> Result<(), Error> {
-    let storage = Storage::open("karo.storage.example").unwrap();
+    let storage = Storage::open("krossbar.storage.example").unwrap();
 
     let value = storage.load::<i32>("test_value");
     assert!(value.get().is_err());

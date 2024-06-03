@@ -1,3 +1,7 @@
 [workspace]
 
-members = ["karo-storage-common", "karo-storage-lib", "karo-storage-viewer"]
+members = [
+    "krossbar-settings-common",
+    # "krossbar-settings-lib",
+    # "krossbar-settings-viewer",
+]

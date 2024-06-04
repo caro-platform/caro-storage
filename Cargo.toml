@@ -5,5 +5,5 @@ resolver = "2"
 members = [
     "krossbar-settings-common",
     "krossbar-settings-lib",
-    # "krossbar-settings-viewer",
+    "krossbar-settings-viewer",
 ]

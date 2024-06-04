@@ -42,18 +42,24 @@ impl Settings {
         Ok(Value::new(name, value, self.inner.clone()))
     }
 
-    /// Create value **name** handle. Sets to **deafult** if doesn't exist
+    /// Create value **name** handle. Sets to **default** and updates settings if doesn't exist
     pub fn load_or_default<T: Serialize + DeserializeOwned>(
         &self,
         name: &str,
         default: T,
     ) -> Result<Value<T>> {
-        let value = match self.inner.lock().unwrap().get(name) {
-            Ok(value) => value,
-            Err(Error::NotFound) => default,
+        let (value, update) = match self.inner.lock().unwrap().get(name) {
+            Ok(value) => (value, false),
+            Err(Error::NotFound) => (default, true),
             Err(e) => return Err(e),
         };
 
-        Ok(Value::new(name, value, self.inner.clone()))
+        let mut result = Value::new(name, value, self.inner.clone());
+
+        if update {
+            result.save()?;
+        }
+
+        Ok(result)
     }
 }

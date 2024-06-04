@@ -37,6 +37,10 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
         self.settings.lock().unwrap().set(&self.name, &self.value)
     }
 
+    pub fn save(&mut self) -> Result<()> {
+        self.settings.lock().unwrap().set(&self.name, &self.value)
+    }
+
     /// Delete value from the storage
     pub fn clear(&self) -> Result<()> {
         self.settings.lock().unwrap().clear(&self.name)

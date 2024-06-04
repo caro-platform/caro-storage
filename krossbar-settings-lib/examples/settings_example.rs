@@ -20,10 +20,16 @@ fn main() {
         assert_eq!(*value, 11);
 
         value.clear().unwrap();
+
+        let value = settings.load_or_default("test_value2", 41).unwrap();
+        assert_eq!(*value, 41);
     }
 
     let settings = Settings::init("krossbar.storage.example").unwrap();
 
     let value = settings.load::<i32>("test_value");
     assert!(value.is_err());
+
+    let value2 = settings.load::<i32>("test_value2").unwrap();
+    assert_eq!(*value2, 41);
 }

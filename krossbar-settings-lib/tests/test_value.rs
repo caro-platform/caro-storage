@@ -41,9 +41,8 @@ fn test_values() {
         let value = settings.load::<i32>("test_value").unwrap();
         assert_eq!(*value, 11);
 
-        let mut value2 = settings.load_or_default("test_value2", 41i32).unwrap();
+        let value2 = settings.load_or_default("test_value2", 41i32).unwrap();
         assert_eq!(*value2, 41);
-        value2.update(42).unwrap();
 
         print_json(&file_path);
 
@@ -57,5 +56,5 @@ fn test_values() {
     assert!(value.is_err());
 
     let value = settings.load::<i32>("test_value2").unwrap();
-    assert_eq!(*value, 42);
+    assert_eq!(*value, 41);
 }

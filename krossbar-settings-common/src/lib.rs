@@ -1,3 +1,5 @@
+//! #[Krossbar](https://crates.io/crates/krossbar) settings common lib
+
 pub mod error;
 pub mod settings;
 

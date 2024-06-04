@@ -9,7 +9,7 @@ readme = "README.md"
 repository = "https://github.com/krossbar-platform/krossbar-settings"
 homepage = "https://krossbar.rs"
 description = """
-Krossbar settings common data
+Krossbar settings common library
 """
 categories = ["configuration"]
 keywords = ["settings", "configuration"]

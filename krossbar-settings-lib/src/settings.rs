@@ -6,7 +6,7 @@ use std::{
 use crate::value::Value;
 use serde::{de::DeserializeOwned, Serialize};
 
-use krossbar_settings_common::{settings, Error, Result, DEFAULT_STORAGE_DIR};
+use krossbar_settings_common::{settings, Error, Result, DEFAULT_SETTINGS_DIR};
 
 /// Settings connections handle
 pub struct Settings {
@@ -17,7 +17,7 @@ pub struct Settings {
 impl Settings {
     /// Open storage for a **service_name** service
     pub fn init(service_name: &str) -> Result<Self> {
-        let settings_path = Path::new(DEFAULT_STORAGE_DIR).join(format!("{service_name}.json"));
+        let settings_path = Path::new(DEFAULT_SETTINGS_DIR).join(format!("{service_name}.json"));
         let settings = settings::Settings::open(&settings_path)?;
 
         Ok(Self {
@@ -26,7 +26,7 @@ impl Settings {
     }
 
     /// Open storage for a **service_name** service
-    pub fn init_at(service_name: &str, settings_dir: &Path) -> Result<Self> {
+    pub fn init_at(settings_dir: &Path, service_name: &str) -> Result<Self> {
         let settings_path = settings_dir.join(format!("{service_name}.json"));
         let settings = settings::Settings::open(&settings_path)?;
 

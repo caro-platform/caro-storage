@@ -19,7 +19,7 @@ fn main() {
         let value = settings.load::<i32>("test_value").unwrap();
         assert_eq!(*value, 11);
 
-        value.clear();
+        value.clear().unwrap();
     }
 
     let settings = Settings::init("krossbar.storage.example").unwrap();

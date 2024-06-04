@@ -1,5 +1,5 @@
 use std::{
-    fs::File,
+    fs::{File, OpenOptions},
     io::{Read, Seek, Write},
     path::Path,
 };
@@ -26,7 +26,11 @@ impl Settings {
             file
         // Existing settings file
         } else {
-            File::open(db_path).map_err(|e| crate::Error::IoError(e.to_string()))?
+            OpenOptions::new()
+                .read(true)
+                .write(true)
+                .open(db_path)
+                .map_err(|e| crate::Error::IoError(e.to_string()))?
         };
 
         Ok(Self { settings_file })

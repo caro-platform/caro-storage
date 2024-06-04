@@ -38,8 +38,8 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
     }
 
     /// Delete value from the storage
-    pub fn clear(&self) {
-        let _ = self.settings.lock().unwrap().clear(&self.name);
+    pub fn clear(&self) -> Result<()> {
+        self.settings.lock().unwrap().clear(&self.name)
     }
 }
 

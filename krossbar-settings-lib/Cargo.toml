@@ -19,7 +19,7 @@ keywords = ["settings", "configuration"]
 bson = "2.3"
 serde = "1.0"
 
-krossbar-settings-common = "0.5.1"
+krossbar-settings-common = { version = "0.5.2", path = "../krossbar-settings-common" }
 
 [dev-dependencies]
 tempdir = "0.3.7"

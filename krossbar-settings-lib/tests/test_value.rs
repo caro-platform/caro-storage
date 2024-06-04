@@ -1,14 +1,12 @@
-use std::{fs::File, io::Read, path::Path};
+use std::path::Path;
 
 use tempdir::TempDir;
 
 use krossbar_settings_lib::Settings;
 
 fn print_json(path: &Path) {
-    let mut file = File::open(path).unwrap();
+    let data = std::fs::read_to_string(path).unwrap();
 
-    let mut result = String::new();
-    let data = file.read_to_string(&mut result).unwrap();
     println!("Settings file content: '{data}'");
 }
 
@@ -23,7 +21,7 @@ fn test_values() {
 
     {
         let settings =
-            Settings::init_at("krossbar.storage.example", settings_tempdir.path()).unwrap();
+            Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
         print_json(&file_path);
 
         let value = settings.load::<i32>("test_value");
@@ -38,20 +36,26 @@ fn test_values() {
     }
 
     {
-        let storage =
-            Settings::init_at("krossbar.storage.example", settings_tempdir.path()).unwrap();
-        let value = storage.load::<i32>("test_value").unwrap();
+        let settings =
+            Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
+        let value = settings.load::<i32>("test_value").unwrap();
         assert_eq!(*value, 11);
+
+        let mut value2 = settings.load_or_default("test_value2", 41i32).unwrap();
+        assert_eq!(*value2, 41);
+        value2.update(42).unwrap();
 
         print_json(&file_path);
 
-        value.clear();
+        value.clear().unwrap();
         print_json(&file_path);
     }
 
-    let storage = Settings::init_at("krossbar.storage.example", settings_tempdir.path()).unwrap();
+    let settings = Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
 
-    let value = storage.load::<i32>("test_value");
-    println!("{:?}", value);
+    let value = settings.load::<i32>("test_value");
     assert!(value.is_err());
+
+    let value = settings.load::<i32>("test_value2").unwrap();
+    assert_eq!(*value, 42);
 }

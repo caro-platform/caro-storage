@@ -43,6 +43,10 @@ impl Settings {
         })
     }
 
+    pub fn has_value(&mut self, name: &str) -> crate::Result<bool> {
+        self.modify_settings(false, |map| Ok(map.contains_key(name)))
+    }
+
     pub fn set<T: Serialize>(&mut self, name: &str, value: &T) -> crate::Result<()> {
         self.modify_settings(true, |map| {
             let json_value =

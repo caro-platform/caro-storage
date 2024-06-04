@@ -15,9 +15,11 @@ fn simple_test() {
 
     settings.set("test-settings-0", &42i32).unwrap();
     assert_eq!(settings.get::<i32>("test-settings-0").unwrap(), 42i32);
+    assert!(settings.has_value("test-settings-0").unwrap());
 
     settings.set("test-settings-1", &42i32).unwrap();
     assert_eq!(settings.get::<i32>("test-settings-1").unwrap(), 42i32);
+    assert!(settings.has_value("test-settings-1").unwrap());
 
     let values = settings.list_values().unwrap();
     assert_eq!(values[0].0, "test-settings-0");
@@ -28,13 +30,18 @@ fn simple_test() {
 
     settings.clear("test-settings-1").unwrap();
     assert!(settings.get::<i32>("test-settings-1").is_err());
+    assert!(settings.has_value("test-settings-0").unwrap());
+    assert!(!settings.has_value("test-settings-1").unwrap());
 
     settings.clear("test-settings-0").unwrap();
     assert!(settings.get::<i32>("test-settings-0").is_err());
     assert!(settings.get::<i32>("test-settings-1").is_err());
+    assert!(!settings.has_value("test-settings-0").unwrap());
+    assert!(!settings.has_value("test-settings-1").unwrap());
 
     settings.set("test-settings-2", &42i32).unwrap();
     assert_eq!(settings.get::<i32>("test-settings-2").unwrap(), 42i32);
+    assert!(settings.has_value("test-settings-2").unwrap());
 
     let values = settings.list_values().unwrap();
     assert_eq!(values[0].0, "test-settings-2");

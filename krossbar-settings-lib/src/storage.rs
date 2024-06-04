@@ -1,33 +1,33 @@
-use std::sync::Arc;
+use std::{
+    path::Path,
+    sync::{Arc, Mutex},
+};
 
 use crate::value::Value;
 use serde::{de::DeserializeOwned, Serialize};
 
-use krossbar_storage_common::{get_storage_dir, queries::QueryRunner};
+use krossbar_settings_common::{settings, DEFAULT_STORAGE_DIR};
 
-/// Storage connections handle
-pub struct Storage {
-    /// SQL queries runner
-    runner: Arc<QueryRunner>,
+/// Settings connections handle
+pub struct Settings {
+    /// Common settings handle
+    inner: Arc<Mutex<settings::Settings>>,
 }
 
-impl Storage {
+impl Settings {
     /// Open storage for a **service_name** service
-    pub fn open(service_name: &str) -> crate::Result<Self> {
-        let this = Self {
-            runner: Arc::new(QueryRunner::open(&format!(
-                "{}{}.db3",
-                get_storage_dir(),
-                service_name
-            ))?),
-        };
+    pub fn init(service_name: &str) -> crate::Result<Self> {
+        let settings_path = Path::new(DEFAULT_STORAGE_DIR).join(service_name);
+        let settings = settings::Settings::open(&settings_path)?;
 
-        this.runner.create_table()?;
-        Ok(this)
+        Ok(Self {
+            inner: Arc::new(Mutex::new(settings)),
+        })
     }
 
     /// Create value **name** handle
-    pub fn load<T: Serialize + DeserializeOwned>(&self, name: &str) -> Value<T> {
-        Value::new(name, self.runner.clone())
+    pub fn load<T: Serialize + DeserializeOwned>(&self, name: &str) -> crate::Result<Value<T>> {
+        
+        Value::new(name, self.inner.clone())
     }
 }

@@ -1,31 +1,35 @@
-use std::{marker::PhantomData, sync::Arc};
+use std::{
+    marker::PhantomData,
+    sync::{Arc, Mutex},
+};
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use krossbar_storage_common::{document::Document, queries::QueryRunner};
+use crate::Settings;
 
 /// Persistend value handle
 pub struct Value<T> {
-    /// Value name
+    /// Name
     name: String,
+    /// Value
+    value: T,
     /// SQL queries runner
-    runner: Arc<QueryRunner>,
-    _pd: PhantomData<T>,
+    settings: Arc<Mutex<Settings>>,
 }
 
 impl<T: Serialize + DeserializeOwned> Value<T> {
-    pub(crate) fn new(name: &str, runner: Arc<QueryRunner>) -> Self {
+    pub(crate) fn new(name: &str, value: T, settings: Arc<Mutex<Settings>>) -> Self {
         Self {
             name: name.into(),
-            runner,
-            _pd: PhantomData,
+            value,
+            settings,
         }
     }
 
     /// Get value from te storage
     /// **Returns** error if value doens't exist in the storage
     pub fn get(&self) -> crate::Result<T> {
-        let blob: Vec<u8> = self.runner.get_value(&self.name)?;
+        let blob: Vec<u8> = self.settings.get_value(&self.name)?;
 
         let bson = bson::from_slice(blob.as_ref())?;
 
@@ -48,11 +52,11 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
     /// Set value to **value**
     pub fn set(&self, value: T) {
         let bytes = Document::into_bytes(value);
-        self.runner.set_value(&self.name, &bytes);
+        self.settings.set_value(&self.name, &bytes);
     }
 
     /// Delete value from the storage
     pub fn clear(&self) {
-        self.runner.clear_value(&self.name);
+        self.settings.clear_value(&self.name);
     }
 }

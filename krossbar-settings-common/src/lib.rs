@@ -5,4 +5,4 @@ pub mod settings;
 
 pub use error::{Error, Result};
 
-pub const DEFAULT_STORAGE_DIR: &str = "/etc/krossbar/storage/";
+pub const DEFAULT_SETTINGS_DIR: &str = "/etc/krossbar/settings/";

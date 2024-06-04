@@ -1,5 +1,6 @@
-use krossbar_storage::Storage;
 use serde::{Deserialize, Serialize};
+
+use krossbar_settings_lib::Settings;
 
 #[derive(Serialize, Deserialize)]
 struct ComplexStructure {
@@ -9,15 +10,23 @@ struct ComplexStructure {
 }
 
 fn main() {
-    let storage = Storage::open("krossbar.viewer.example").unwrap();
+    let storage = Settings::init("krossbar.viewer.example").unwrap();
 
-    storage.load::<i32>("int").set(11);
-    storage.load::<String>("string").set("Hello, world!".into());
+    storage.load::<i32>("int").unwrap().update(11).unwrap();
+
+    storage
+        .load::<String>("string")
+        .unwrap()
+        .update("Hello, world!".into())
+        .unwrap();
+
     storage
         .load::<ComplexStructure>("struct")
-        .set(ComplexStructure {
+        .unwrap()
+        .update(ComplexStructure {
             integer: 42,
             string: "Test".into(),
             vec: vec![true, false],
-        });
+        })
+        .unwrap();
 }

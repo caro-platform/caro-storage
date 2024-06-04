@@ -1,21 +1,29 @@
-use std::io::Error;
+use krossbar_settings_lib::Settings;
 
-use krossbar_storage::Storage;
+fn main() {
+    {
+        let settings = Settings::init("krossbar.storage.example").unwrap();
 
-fn main() -> Result<(), Error> {
-    let storage = Storage::open("krossbar.storage.example").unwrap();
+        let value = settings.load::<i32>("test_value");
+        assert!(value.is_err());
 
-    let value = storage.load::<i32>("test_value");
-    assert!(value.get().is_err());
+        let mut value = settings.load_or_default("test_value", 42i32).unwrap();
+        assert_eq!(*value, 42);
 
-    assert_eq!(value.get_default(42), 42);
-    assert_eq!(value.get().unwrap(), 42);
+        value.update(11).unwrap();
+        assert_eq!(*value, 11);
+    }
 
-    value.set(11);
-    assert_eq!(value.get().unwrap(), 11);
+    {
+        let settings = Settings::init("krossbar.storage.example").unwrap();
+        let value = settings.load::<i32>("test_value").unwrap();
+        assert_eq!(*value, 11);
 
-    value.clear();
-    assert!(value.get().is_err());
+        value.clear();
+    }
 
-    Ok(())
+    let settings = Settings::init("krossbar.storage.example").unwrap();
+
+    let value = settings.load::<i32>("test_value");
+    assert!(value.is_err());
 }

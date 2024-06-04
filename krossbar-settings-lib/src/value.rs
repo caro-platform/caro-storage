@@ -1,11 +1,11 @@
 use std::{
-    marker::PhantomData,
+    fmt::{Debug, Display, Formatter, Result as FmtResult},
+    ops::Deref,
     sync::{Arc, Mutex},
 };
 
+use krossbar_settings_common::{settings, Result};
 use serde::{de::DeserializeOwned, Serialize};
-
-use crate::Settings;
 
 /// Persistend value handle
 pub struct Value<T> {
@@ -14,11 +14,11 @@ pub struct Value<T> {
     /// Value
     value: T,
     /// SQL queries runner
-    settings: Arc<Mutex<Settings>>,
+    settings: Arc<Mutex<settings::Settings>>,
 }
 
 impl<T: Serialize + DeserializeOwned> Value<T> {
-    pub(crate) fn new(name: &str, value: T, settings: Arc<Mutex<Settings>>) -> Self {
+    pub(crate) fn new(name: &str, value: T, settings: Arc<Mutex<settings::Settings>>) -> Self {
         Self {
             name: name.into(),
             value,
@@ -26,37 +26,43 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
         }
     }
 
-    /// Get value from te storage
-    /// **Returns** error if value doens't exist in the storage
-    pub fn get(&self) -> crate::Result<T> {
-        let blob: Vec<u8> = self.settings.get_value(&self.name)?;
-
-        let bson = bson::from_slice(blob.as_ref())?;
-
-        let document = bson::from_bson::<Document<T>>(bson)?;
-        Ok(document.value())
-    }
-
-    /// Get value from te storage. If the value doesn't exists, sets it to the **default** value
-    /// **Returns** current value data, or default value if doesn't exists
-    pub fn get_default(&self, default: T) -> T {
-        match self.get() {
-            Err(_) => {
-                self.set(default);
-                self.get().unwrap()
-            }
-            Ok(value) => value,
-        }
+    /// Get the value
+    pub fn get(&self) -> &T {
+        &self.value
     }
 
     /// Set value to **value**
-    pub fn set(&self, value: T) {
-        let bytes = Document::into_bytes(value);
-        self.settings.set_value(&self.name, &bytes);
+    pub fn update(&mut self, value: T) -> Result<()> {
+        self.value = value;
+        self.settings.lock().unwrap().set(&self.name, &self.value)
     }
 
     /// Delete value from the storage
     pub fn clear(&self) {
-        self.settings.clear_value(&self.name);
+        let _ = self.settings.lock().unwrap().clear(&self.name);
+    }
+}
+
+impl<T: Serialize + DeserializeOwned> Deref for Value<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.get()
+    }
+}
+
+impl<T: Serialize + DeserializeOwned + Display> Display for Value<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl<T: Serialize + DeserializeOwned + Debug> Debug for Value<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(
+            f,
+            "Value {{ name: {}, value: {:?} }}",
+            self.name, self.value
+        )
     }
 }

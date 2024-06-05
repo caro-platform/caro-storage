@@ -25,7 +25,7 @@
 //!     println!("Settings: '{data}'");
 //! }
 //!
-//! fn main() {
+//! fn manage_settings() {
 //!     let settings = Settings::init(SERVICE_NAME).unwrap();
 //!
 //!     let settings_path = Path::new(DEFAULT_SETTINGS_DIR).join(format!("{SERVICE_NAME}.json"));

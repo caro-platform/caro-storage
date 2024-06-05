@@ -12,14 +12,14 @@ struct ComplexStructure {
 fn main() {
     let storage = Settings::init("krossbar.viewer.example").unwrap();
 
-    storage.load_or_default("int", 42).unwrap();
+    storage.read_or_insert("int", 42).unwrap();
 
     storage
-        .load_or_default("string", "Hello, world!".to_owned())
+        .read_or_insert("string", "Hello, world!".to_owned())
         .unwrap();
 
     storage
-        .load_or_default(
+        .read_or_insert(
             "struct",
             ComplexStructure {
                 integer: 42,

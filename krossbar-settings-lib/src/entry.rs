@@ -7,17 +7,17 @@ use std::{
 use krossbar_settings_common::{settings, Result};
 use serde::{de::DeserializeOwned, Serialize};
 
-/// Persistend value handle
-pub struct Value<T> {
+/// Settings entry handle
+pub struct Entry<T> {
     /// Name
     name: String,
     /// Value
     value: T,
-    /// SQL queries runner
+    /// Settings handle
     settings: Arc<Mutex<settings::Settings>>,
 }
 
-impl<T: Serialize + DeserializeOwned> Value<T> {
+impl<T: Serialize + DeserializeOwned> Entry<T> {
     pub(crate) fn new(name: &str, value: T, settings: Arc<Mutex<settings::Settings>>) -> Self {
         Self {
             name: name.into(),
@@ -31,23 +31,25 @@ impl<T: Serialize + DeserializeOwned> Value<T> {
         &self.value
     }
 
-    /// Set value to **value**
+    /// Update the entry to **value**.
+    /// Writes new value into the settings file
     pub fn update(&mut self, value: T) -> Result<()> {
         self.value = value;
         self.settings.lock().unwrap().set(&self.name, &self.value)
     }
 
+    /// Write entry value into the settings file
     pub fn save(&mut self) -> Result<()> {
         self.settings.lock().unwrap().set(&self.name, &self.value)
     }
 
-    /// Delete value from the storage
+    /// Delete entry from the settings file
     pub fn clear(&self) -> Result<()> {
         self.settings.lock().unwrap().clear(&self.name)
     }
 }
 
-impl<T: Serialize + DeserializeOwned> Deref for Value<T> {
+impl<T: Serialize + DeserializeOwned> Deref for Entry<T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
@@ -55,13 +57,13 @@ impl<T: Serialize + DeserializeOwned> Deref for Value<T> {
     }
 }
 
-impl<T: Serialize + DeserializeOwned + Display> Display for Value<T> {
+impl<T: Serialize + DeserializeOwned + Display> Display for Entry<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "{}", self.value)
     }
 }
 
-impl<T: Serialize + DeserializeOwned + Debug> Debug for Value<T> {
+impl<T: Serialize + DeserializeOwned + Debug> Debug for Entry<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(
             f,

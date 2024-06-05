@@ -1,35 +1,28 @@
+use std::path::Path;
+
+use krossbar_settings_common::DEFAULT_SETTINGS_DIR;
 use krossbar_settings_lib::Settings;
 
+const SERVICE_NAME: &str = "krossbar.storage.example";
+
+fn print_json(path: &Path) {
+    let data = std::fs::read_to_string(path).unwrap();
+    println!("Settings: '{data}'");
+}
+
 fn main() {
-    {
-        let settings = Settings::init("krossbar.storage.example").unwrap();
+    let settings = Settings::init(SERVICE_NAME).unwrap();
 
-        let value = settings.load::<i32>("test_value");
-        assert!(value.is_err());
+    let settings_path = Path::new(DEFAULT_SETTINGS_DIR).join(format!("{SERVICE_NAME}.json"));
+    print_json(&settings_path); // {}
 
-        let mut value = settings.load_or_default("test_value", 42i32).unwrap();
-        assert_eq!(*value, 42);
+    let mut value = settings.read_or_insert("test_value", 42i32).unwrap();
+    print_json(&settings_path);
+    // { "test_value": ${some number} } if existed or
+    // { "test_value": 42 } if a newly created entry
 
-        value.update(11).unwrap();
-        assert_eq!(*value, 11);
-    }
+    value.update(11).unwrap();
+    print_json(&settings_path); // { "test_value": 11 }
 
-    {
-        let settings = Settings::init("krossbar.storage.example").unwrap();
-        let value = settings.load::<i32>("test_value").unwrap();
-        assert_eq!(*value, 11);
-
-        value.clear().unwrap();
-
-        let value = settings.load_or_default("test_value2", 41).unwrap();
-        assert_eq!(*value, 41);
-    }
-
-    let settings = Settings::init("krossbar.storage.example").unwrap();
-
-    let value = settings.load::<i32>("test_value");
-    assert!(value.is_err());
-
-    let value2 = settings.load::<i32>("test_value2").unwrap();
-    assert_eq!(*value2, 41);
+    value.clear().unwrap(); // {}
 }

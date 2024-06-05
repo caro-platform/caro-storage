@@ -24,10 +24,10 @@ fn test_values() {
             Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
         print_json(&file_path);
 
-        let value = settings.load::<i32>("test_value");
+        let value = settings.read::<i32>("test_value");
         assert!(value.is_err());
 
-        let mut value = settings.load_or_default("test_value", 42i32).unwrap();
+        let mut value = settings.read_or_insert("test_value", 42i32).unwrap();
         assert_eq!(*value, 42);
 
         value.update(11).unwrap();
@@ -38,10 +38,10 @@ fn test_values() {
     {
         let settings =
             Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
-        let value = settings.load::<i32>("test_value").unwrap();
+        let value = settings.read::<i32>("test_value").unwrap();
         assert_eq!(*value, 11);
 
-        let value2 = settings.load_or_default("test_value2", 41i32).unwrap();
+        let value2 = settings.read_or_insert("test_value2", 41i32).unwrap();
         assert_eq!(*value2, 41);
 
         print_json(&file_path);
@@ -52,9 +52,9 @@ fn test_values() {
 
     let settings = Settings::init_at(settings_tempdir.path(), "krossbar.storage.example").unwrap();
 
-    let value = settings.load::<i32>("test_value");
+    let value = settings.read::<i32>("test_value");
     assert!(value.is_err());
 
-    let value = settings.load::<i32>("test_value2").unwrap();
+    let value = settings.read::<i32>("test_value2").unwrap();
     assert_eq!(*value, 41);
 }

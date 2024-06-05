@@ -11,4 +11,25 @@
 
 # krossbar-settings-viewer
 
+Krossbar settings viewer
 
+A convenient tool to read Krossbar settings files.
+It uses [DEFAULT_SETTINGS_DIR] by default and is able to query individual
+fields, which is simpler, than reading corresponding JSON by hands.
+
+## Usage
+
+```sh
+Krossbar settings viewer
+
+USAGE:
+    krossbar-settings-viewer <TARGET_SERVICE> [KEY]
+
+ARGS:
+    <TARGET_SERVICE>    Service to monitor
+    <KEY>
+
+OPTIONS:
+    -h, --help       Print help information
+    -V, --version    Print version information
+```

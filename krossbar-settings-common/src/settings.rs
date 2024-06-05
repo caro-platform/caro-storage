@@ -7,18 +7,19 @@ use std::{
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::Value;
 
-/// Utility struct to run SQL queries
+/// Settings handle
 pub struct Settings {
-    /// SQLite connections
+    /// Settings file handle
     settings_file: File,
 }
 
 impl Settings {
-    pub fn open(db_path: &Path) -> crate::Result<Self> {
+    /// Open settings file at **path**
+    pub fn open(path: &Path) -> crate::Result<Self> {
         // No settings fiel. Let's create and init one
-        let settings_file = if !Path::new(db_path).exists() {
+        let settings_file = if !Path::new(path).exists() {
             let mut file =
-                File::create_new(db_path).map_err(|e| crate::Error::IoError(e.to_string()))?;
+                File::create_new(path).map_err(|e| crate::Error::IoError(e.to_string()))?;
 
             file.write_all("{}".as_bytes())
                 .map_err(|e| crate::Error::IoError(e.to_string()))?;
@@ -29,16 +30,17 @@ impl Settings {
             OpenOptions::new()
                 .read(true)
                 .write(true)
-                .open(db_path)
+                .open(path)
                 .map_err(|e| crate::Error::IoError(e.to_string()))?
         };
 
         Ok(Self { settings_file })
     }
 
-    pub fn get<T: DeserializeOwned>(&mut self, name: &str) -> crate::Result<T> {
+    /// Read a value from the settings file
+    pub fn get<T: DeserializeOwned>(&mut self, key: &str) -> crate::Result<T> {
         self.modify_settings(false, |map| {
-            if let Some(settings_value) = map.remove(name) {
+            if let Some(settings_value) = map.remove(key) {
                 serde_json::from_value(settings_value)
                     .map_err(|e| crate::Error::Type(e.to_string()))
             } else {
@@ -47,27 +49,31 @@ impl Settings {
         })
     }
 
-    pub fn has_value(&mut self, name: &str) -> crate::Result<bool> {
-        self.modify_settings(false, |map| Ok(map.contains_key(name)))
+    /// Check if there's a value with a given **key**
+    pub fn has_value(&mut self, key: &str) -> crate::Result<bool> {
+        self.modify_settings(false, |map| Ok(map.contains_key(key)))
     }
 
-    pub fn set<T: Serialize>(&mut self, name: &str, value: &T) -> crate::Result<()> {
+    /// Write new value in the settings file
+    pub fn set<T: Serialize>(&mut self, key: &str, value: &T) -> crate::Result<()> {
         self.modify_settings(true, |map| {
             let json_value =
                 serde_json::to_value(value).map_err(|e| crate::Error::Type(e.to_string()))?;
 
-            map.insert(name.to_owned(), json_value);
+            map.insert(key.to_owned(), json_value);
             Ok(())
         })
     }
 
-    pub fn clear(&mut self, name: &str) -> crate::Result<()> {
+    /// Clear out entry with a given **key** from the file
+    pub fn clear(&mut self, key: &str) -> crate::Result<()> {
         self.modify_settings(true, |map| {
-            map.remove(name);
+            map.remove(key);
             Ok(())
         })
     }
 
+    /// List value in the settings file
     pub fn list_values(&mut self) -> crate::Result<Vec<(String, Value)>> {
         self.modify_settings(false, |map| {
             let keys: Vec<String> = map.keys().cloned().collect();

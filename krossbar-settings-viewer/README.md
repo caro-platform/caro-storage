@@ -14,7 +14,7 @@
 Krossbar settings viewer
 
 A convenient tool to read Krossbar settings files.
-It uses [DEFAULT_SETTINGS_DIR] by default and is able to query individual
+It uses [DEFAULT_SETTINGS_DIR](https://docs.rs/krossbar-settings-common/latest/krossbar_settings_common/constant.DEFAULT_SETTINGS_DIR.html) by default and is able to query individual
 fields, which is simpler, than reading corresponding JSON by hands.
 
 ## Usage

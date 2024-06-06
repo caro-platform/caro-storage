@@ -16,13 +16,13 @@ Krossbar settings lib
 The library provides a convenient wrapper for reading and writing
 settings into JSON file.
 
-Use [Settings] handle to open settings file. Using the handle you can
+Use [Settings](https://docs.rs/krossbar-settings-lib/latest/krossbar_settings_lib/settings/struct.Settings.html) handle to open settings file. Using the handle you can
 read, insert or delete settings entries from the inner JSON.
 
-To create an [Entry] use [Settings::read] or [Settings::read_or_insert] method, which tries to read
+To create an [Entry](https://docs.rs/krossbar-settings-lib/latest/krossbar_settings_lib/entry/struct.Entry.html) use [Settings::read] or [Settings::read_or_insert] method, which tries to read
 the value from the settings file, or adds new JSON entry if doesn't exist.
 
-Using [Entry] handle you can modify corresponding JSON settings file.
+Using [Entry](https://docs.rs/krossbar-settings-lib/latest/krossbar_settings_lib/entry/struct.Entry.html) handle you can modify corresponding JSON settings file.
 
 ## Examples
 ```rust
@@ -38,7 +38,7 @@ fn print_json(path: &Path) {
     println!("Settings: '{data}'");
 }
 
-fn main() {
+fn manage_settings() {
     let settings = Settings::init(SERVICE_NAME).unwrap();
 
     let settings_path = Path::new(DEFAULT_SETTINGS_DIR).join(format!("{SERVICE_NAME}.json"));

@@ -1,23 +1,24 @@
 [package]
 name = "krossbar-settings-common"
 version = "0.5.4"
-edition = "2021"
-rust-version = "1.75"
-authors = ["Alexander Smoktal <https://github.com/alexander-smoktal>"]
-license = "MIT"
 readme = "README.md"
-repository = "https://github.com/krossbar-platform/krossbar-settings"
-homepage = "https://krossbar.rs"
 description = """
 Krossbar settings common library
 """
 categories = ["configuration"]
 keywords = ["settings", "configuration"]
 
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 thiserror = "1.0"
 
 [dev-dependencies]
-tempdir = "0.3.7"
+tempdir = { workspace = true }

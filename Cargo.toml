@@ -7,3 +7,21 @@ members = [
     "krossbar-settings-lib",
     "krossbar-settings-viewer",
 ]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.75"
+authors = [
+    "Alexander Smoktal <https://github.com/alexander-smoktal>",
+    "Krossbar team",
+]
+license = "MIT"
+repository = "https://github.com/krossbar-platform/krossbar-settings"
+homepage = "https://krossbar.rs"
+
+[workspace.dependencies]
+serde = "1.0"
+serde_json = "1.0"
+tempdir = "0.3.7"
+
+krossbar-settings-common = "0.5.3"
